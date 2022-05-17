@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
+import EmployeeService from "../services/EmployeeService";
+import Employee from "./Employee";
 
 
 const EmployeeList = () => {
@@ -8,20 +10,24 @@ const EmployeeList = () => {
     const [employees, setEmployees] = useState(null);
 
     useEffect(() => {
-        const fetchData =
+        const fetchData = async () => {
             setLoading(true);
             try {
-
-            } catch (e) {
-                
+                const response = await EmployeeService.fetchEmployees();
+                setEmployees(response.data)
+            } catch (error) {
+                console.log(error)
             }
+            setLoading(false)
+        }
+        fetchData()
     }, [])
     
 
     return (
         <div className="container mx-auto my-8">
             <div className="h-12">
-                <button onClick={()=> navigate("/addEmployee")} className="rounded bg-slate-600 text-white px-6 py-2 ml-6 font-semibold">
+                <button onClick={()=> navigate("/addEmployee")} className="rounded bg-slate-600 text-white px-6 py-2 ml-5 font-semibold">
                     Add Employee
                 </button>
             </div>
@@ -35,17 +41,13 @@ const EmployeeList = () => {
                             <th className="text-right font-medium text-gray-500 py-2 px-6">Actions</th>
                         </tr>
                     </thead>
+                    {!loading && (
                     <tbody className="bg-white">
-                        <tr>
-                            <td className="text-left py-2 px-6 whitespace-nowrap"><div className="text-sm text-gray-700">Ruth</div></td>
-                            <td className="text-left py-2 px-6 whitespace-nowrap"><div className="text-sm text-gray-700">Adeyemi</div></td>
-                            <td className="text-left py-2 px-6 whitespace-nowrap"><div className="text-sm text-gray-700">r.adeyemi@semicolon.africa</div></td>
-                            <td className="text-right py-2 px-6 whitespace-nowrap font-medium text-sm">
-                                <a href="" className="rounded text-white bg-blue-500 py-1 px-2 hover:bg-blue-700">Edit</a>
-                                <a href="" className="rounded text-white bg-red-500 py-1 px-2 ml-1 hover:bg-red-700">Delete</a>
-                            </td>
-                        </tr>
+                        {employees.map((employee) => (
+                            <Employee employee={employee} key={employee.id} />
+                        ))}
                     </tbody>
+                    )}
                 </table>
             </div>
         </div>
