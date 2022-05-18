@@ -6,7 +6,7 @@ const Navbar = () => {
     return (
         <div className="bg-gray-800">
             <div className="h-16 px-6 flex items-center text-white font-bold">
-                <p><a onClick={() => navigate("/employeeList")}> Employee Management System </a></p>
+                <p><a onClick={() => navigate("/employeeList")} className="hover:cursor-pointer"> Employee Management System </a></p>
             </div>
         </div>
     );
